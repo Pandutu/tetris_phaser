@@ -1,0 +1,39 @@
+{
+    "name": "tetris_phaser",
+    "version": "1.0.0",
+    "description": "tetris game for phaser learn",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "dev": "webpack-dev-server"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Pandutu/tetris_phaser.git"
+    },
+    "keywords": [
+        "phaser",
+        "tetris"
+    ],
+    "author": "ink",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/Pandutu/tetris_phaser/issues"
+    },
+    "homepage": "https://github.com/Pandutu/tetris_phaser#readme",
+    "dependencies": {
+        "phaser": "^3.10.1"
+    },
+    "devDependencies": {
+        "awesome-typescript-loader": "^5.2.0",
+        "babel-core": "^6.26.3",
+        "babel-loader": "^7.1.5",
+        "babel-preset-env": "^1.7.0",
+        "copy-webpack-plugin": "^4.5.2",
+        "html-webpack-plugin": "^3.2.0",
+        "typescript": "^2.9.2",
+        "webpack": "^4.16.0",
+        "webpack-cli": "^2.1.5",
+        "webpack-dev-server": "^3.1.4"
+    }
+}
