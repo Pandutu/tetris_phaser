@@ -2,7 +2,8 @@ import {
     BRICK_COLORS,
     BLOCK_MAP,
     BLOCK_X_COUNT,
-    BLOCK_Y_COUNT
+    BLOCK_Y_COUNT,
+    isFloat
 } from "../global_vars";
 
 export const NO_COLLIDE = 0
@@ -23,6 +24,12 @@ export class Brick {
     playground_view: Phaser.Tilemaps.Tilemap
     playground_model: number[][]
 
+    last_move_timestamp: number
+    last_roll_timestamp: number
+    last_fall_timestamp: number
+
+    fall_speed_level: number
+
     constructor(pay_ground_view: Phaser.Tilemaps.Tilemap, pay_ground_model: number[][], x: number, y: number) {
         this.playground_view = pay_ground_view
         this.playground_model = pay_ground_model
@@ -37,9 +44,21 @@ export class Brick {
             seed_date.getMilliseconds().toString()
         ])
 
-        this.random_type()
+        this.last_move_timestamp = 0
+        this.last_roll_timestamp = 0
+        this.last_fall_timestamp = 0
+        this.fall_speed_level = 0
 
-        this.move_to(x, y)
+        this.type = 'o'
+        this.posture = 0
+        this.color = BRICK_COLORS[0]
+        this.x = x
+        this.y = y
+    }
+
+    set_block_shape(type: string, posture: number): any {
+        this.type = type
+        this.posture = posture
     }
 
     get_blocks_pos(x: number, y: number, type ? : string, posture ? : number): Object {
@@ -51,6 +70,7 @@ export class Brick {
 
         let move_left = 0
         let move_right = 0
+
         for (let offset of BLOCK_MAP[type][posture]) {
 
             let tmp_x = x + offset[0]
@@ -75,7 +95,7 @@ export class Brick {
         }
     }
 
-    is_collide(blocks_pos ? : number[][]): boolean {
+    is_collide(blocks_pos : number[][]): boolean {
         let result = false
         for (let pos of blocks_pos) {
             if (pos[0] < 0 || pos[0] >= BLOCK_X_COUNT) {
@@ -86,7 +106,7 @@ export class Brick {
                 result = true
                 break
             }
-            if(pos[1] < 0) {
+            if (pos[1] < 0) {
                 continue
             }
             if (this.playground_model[pos[0]][pos[1]] != 0) {
@@ -111,40 +131,43 @@ export class Brick {
 
     show() {
         for (let block_pos of this.blocks) {
-            this.playground_view.putTileAt(this.color, block_pos[0], block_pos[1])
-            this.playground_model[block_pos[0]][block_pos[1]] = this.color
+            if (block_pos[0] >= 0 && block_pos[0] < BLOCK_X_COUNT && block_pos[1] >= 0 && block_pos[1] < BLOCK_Y_COUNT) {
+                this.playground_view.putTileAt(this.color, block_pos[0], block_pos[1])
+                this.playground_model[block_pos[0]][block_pos[1]] = this.color
+            }
         }
     }
 
     hide() {
         for (let block_pos of this.blocks) {
-            this.playground_view.removeTileAt(block_pos[0], block_pos[1])
-            this.playground_model[block_pos[0]][block_pos[1]] = 0
+            if (block_pos[0] >= 0 && block_pos[0] < BLOCK_X_COUNT && block_pos[1] >= 0 && block_pos[1] < BLOCK_Y_COUNT) {
+                this.playground_view.removeTileAt(block_pos[0], block_pos[1])
+                this.playground_model[block_pos[0]][block_pos[1]] = 0
+            }
         }
     }
 
-    move_to(x: number, y: number, stamp = false, wild_magic = false): boolean {
-        if (x == 0 && y == 0) {
-            return true
-        }
-
+    move_to(x: number, y: number, stamp = false, wild_magic = false, check_collide = true, show = true): boolean {
         let _result = false
 
-        if(stamp == false) {
+        if (stamp == false) {
             this.hide()
         }
-        if(wild_magic == true) {
+        if (wild_magic == true) {
             this.random_type()
         }
+
         let blocks_pos_new = this.get_blocks_pos(x, y)
-        if (!this.is_collide(blocks_pos_new['pos'])) {
+        if (check_collide == false || !this.is_collide(blocks_pos_new['pos'])) {
             this.x = x
             this.y = y
             this.blocks = blocks_pos_new['pos']
             this.x += blocks_pos_new['x_adjust']
             _result = true
         }
-        this.show()
+        if (show == true) {
+            this.show()
+        }
 
         return _result
     }

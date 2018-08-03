@@ -19,13 +19,14 @@ export const BC_EMERALD = 11
 export const BC_YELLOW = 12
 
 export const ROLL_WAIT_TIME_THRESHOLD = 700 // ms
-export const FALL_TIME_INTERVAL = [700, 500, 300, 200, 150, 100, 77, 33]
+export const FALL_TIME_INTERVAL = [400, 300, 200, 100, 80, 70, 60, 50, 40, 30, 20, 10]
 
 export const GAME_STATE_READY = 0
 export const GAME_STATE_GAMEOVER = 1
 export const GAME_STATE_PLAYING = 2
 export const GAME_STATE_CLEAN_PLAYGROUND = 3
 
+export const GAME_BLOCK_FOR_FUN_COUNT = 10
 
 export const BLOCK_MAP = {
     'Z': [
@@ -155,5 +156,14 @@ export const BLOCK_MAP = {
             [1, 0],
             [1, 1]
         ]
+    ],
+    'o': [
+        [
+            [0, 0]
+        ]
     ]
+}
+
+export function isFloat(n: number) {
+    return n % 1 !== 0
 }
